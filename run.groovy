@@ -2,12 +2,7 @@
 this.getClass().classLoader.rootLoader.addURL(new File("./bitcoincashj-core-0.14.5-bip47-bundled.jar").toURL())
 
 
-import org.bitcoinj.core.Block
-import org.bitcoinj.core.FilteredBlock
-import org.bitcoinj.core.NetworkParameters
-import org.bitcoinj.core.Peer
-import org.bitcoinj.core.listeners.AbstractPeerDataEventListener
-import org.bitcoinj.core.listeners.PeerDataEventListener
+import org.bitcoinj.core.Utils
 import org.bitcoinj.params.BCCMainNetParams
 import org.bitcoinj.params.BCCTestNet3Params
 import org.bitcoinj.params.TestNet3Params
@@ -20,18 +15,24 @@ import org.bitcoinj.wallet.bip47.models.StashDeterministicSeed
 import javax.annotation.Nullable;
 pct = 0
 
-println(args[0]);
-blockchains = [new Blockchain(2,BCCMainNetParams.get(), "BCH", "Bitcoin Cash"),
-new Blockchain(3, BCCTestNet3Params.get(), "tBCH", "Test Bitcoin Cash"),
-new Blockchain(0, MainNetParams.get(), "BTC", "Bitcoin Core"),
-new Blockchain(1, TestNet3Params.get(), "tBTC", "Test Bitcoin Core")]
+println("BLOCKCHAIN: " + args[0]);
 
+StashDeterministicSeed seed ;
+if (args.length > 1) {
+    String mnemonic = args[1..args.length-1].join(" ");
+    println("SEED: ${mnemonic}")
+    seed = new StashDeterministicSeed(mnemonic, "", Utils.currentTimeSeconds());
+}
+
+blockchains = [new Blockchain(2,BCCMainNetParams.get(), "BCH", "Bitcoin Cash"),
+               new Blockchain(3, BCCTestNet3Params.get(), "tBCH", "Test Bitcoin Cash"),
+               new Blockchain(0, MainNetParams.get(), "BTC", "Bitcoin Core"),
+               new Blockchain(1, TestNet3Params.get(), "tBTC", "Test Bitcoin Core")]
 
 Blockchain blockchain = blockchains.find { it.coin == args[0]}
 dir = new File(".");
 coin = blockchain.coin
 print("Creating new ${coin} wallet ...")
-StashDeterministicSeed seed = null
 org.bitcoinj.core.Context.propagate(new org.bitcoinj.core.Context(blockchain.getNetworkParameters()));
 Wallet BTCwallet = new Wallet(blockchain,dir,seed)
 println("done.")
