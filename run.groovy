@@ -59,7 +59,7 @@ println("done.")
 while (true) {
     lastHeight = BTCwallet.vWallet.getLastBlockSeenHeight();
     print("\r")
-    print("Last height: ${lastHeight}\r")
-    Thread.sleep(1000)
+    print("Last height: ${lastHeight} Balance: ${BTCwallet.vWallet.getBalance()} Peers: ${BTCwallet.getConnectedPeers().size}\r")
+    Thread.sleep(200)
 }
 println("done")
